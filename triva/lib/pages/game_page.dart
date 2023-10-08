@@ -1,24 +1,34 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:triva/provider/game_page_provider.dart';
 
 class GamePage extends StatelessWidget {
   double? _deviceHeight, _deviceWidth;
+
+  GamePageProvider? _pageProvider;
   @override
   Widget build(BuildContext context) {
     _deviceHeight = MediaQuery.of(context).size.height;
     _deviceWidth = MediaQuery.of(context).size.width;
-    return _buildUi();
+    return ChangeNotifierProvider(
+      create: (context) => GamePageProvider(context: context),
+      child: _buildUi(),
+    );
   }
 
   Widget _buildUi() {
-    return Scaffold(
-      body: SafeArea(
-          child: Container(
-        padding: EdgeInsets.symmetric(
-          horizontal: _deviceHeight! * 0.05,
-        ),
-        child: _gameUi(),
-      )),
-    );
+    return Builder(builder: (_context) {
+      _pageProvider = _context.watch<GamePageProvider>();
+      return Scaffold(
+        body: SafeArea(
+            child: Container(
+          padding: EdgeInsets.symmetric(
+            horizontal: _deviceHeight! * 0.05,
+          ),
+          child: _gameUi(),
+        )),
+      );
+    });
   }
 
   Widget _gameUi() {
