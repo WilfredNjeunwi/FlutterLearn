@@ -10,6 +10,7 @@ class GamePageProvider extends ChangeNotifier {
   List? questions;
   int _currentQuestionCount = 0;
   int _score = 0;
+  double level = 1;
   BuildContext context;
   GamePageProvider({required this.context}) {
     _dio.options.baseUrl = 'https://opentdb.com/api.php';
@@ -20,7 +21,11 @@ class GamePageProvider extends ChangeNotifier {
     var response = await _dio.get('', queryParameters: {
       'amount': _maxQuestions,
       'type': 'boolean',
-      'difficulty': "easy",
+      'difficulty': level == 0
+          ? "easy"
+          : level == 1
+              ? "medium"
+              : "difficult",
     });
 
     var data = jsonDecode(response.toString());
@@ -64,7 +69,7 @@ class GamePageProvider extends ChangeNotifier {
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
-            backgroundColor: Colors.blue,
+            backgroundColor: _score >= 5 ? Colors.green : Colors.red,
             title: const Text("End Game!",
                 style: TextStyle(fontSize: 25, color: Colors.white)),
             content: Text("Score: $_score/10"),
@@ -74,5 +79,10 @@ class GamePageProvider extends ChangeNotifier {
     await Future.delayed(const Duration(seconds: 3));
     Navigator.pop(context);
     Navigator.pop(context);
+  }
+
+  void changeLevel(double lev) {
+    level = lev;
+    notifyListeners();
   }
 }
