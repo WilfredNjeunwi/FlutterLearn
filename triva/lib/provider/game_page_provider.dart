@@ -9,6 +9,7 @@ class GamePageProvider extends ChangeNotifier {
   final int _maxQuestions = 10;
   List? questions;
   int _currentQuestionCount = 0;
+  int _score = 0;
   BuildContext context;
   GamePageProvider({required this.context}) {
     _dio.options.baseUrl = 'https://opentdb.com/api.php';
@@ -16,14 +17,14 @@ class GamePageProvider extends ChangeNotifier {
   }
 
   Future<void> _getQuestionsFromAPI() async {
-    var _response = await _dio.get('', queryParameters: {
-      'amount': 10,
+    var response = await _dio.get('', queryParameters: {
+      'amount': _maxQuestions,
       'type': 'boolean',
       'difficulty': "easy",
     });
 
-    var _data = jsonDecode(_response.toString());
-    questions = _data['results'];
+    var data = jsonDecode(response.toString());
+    questions = data['results'];
     notifyListeners();
   }
 
@@ -31,13 +32,47 @@ class GamePageProvider extends ChangeNotifier {
     return questions![_currentQuestionCount]["question"];
   }
 
-  void answerQuestion(String _answer) {
+  void answerQuestion(String answer) async {
     bool isCorrect =
-        questions![_currentQuestionCount]["correct_answer"] == _answer;
-
+        questions![_currentQuestionCount]["correct_answer"] == answer;
+    isCorrect ? _score++ : null;
     _currentQuestionCount++;
-    print(questions![_currentQuestionCount]["correct_answer"]);
-    log(isCorrect ? "Correct" : "Incorrect");
-    notifyListeners();
+    showDialog(
+        context: context,
+        builder: (BuildContext _copntext) {
+          return AlertDialog(
+            backgroundColor: isCorrect ? Colors.green : Colors.red,
+            title: Icon(
+              isCorrect ? Icons.check_circle : Icons.cancel_sharp,
+              color: Colors.white,
+            ),
+          );
+        });
+    await Future.delayed(const Duration(seconds: 1));
+
+    Navigator.pop(context);
+
+    if (_currentQuestionCount == _maxQuestions) {
+      endGame();
+    } else {
+      notifyListeners();
+    }
+  }
+
+  Future<void> endGame() async {
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            backgroundColor: Colors.blue,
+            title: const Text("End Game!",
+                style: TextStyle(fontSize: 25, color: Colors.white)),
+            content: Text("Score: $_score/10"),
+          );
+        });
+
+    await Future.delayed(const Duration(seconds: 3));
+    Navigator.pop(context);
+    Navigator.pop(context);
   }
 }
