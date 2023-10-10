@@ -10,7 +10,7 @@ class GamePageProvider extends ChangeNotifier {
   List? questions;
   int _currentQuestionCount = 0;
   int _score = 0;
-  double level = 1;
+  double level = 0;
   BuildContext context;
   GamePageProvider({required this.context}) {
     _dio.options.baseUrl = 'https://opentdb.com/api.php';
