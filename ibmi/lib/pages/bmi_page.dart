@@ -1,4 +1,5 @@
 import 'dart:math';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -239,9 +240,46 @@ class _BMIPageState extends State<BMIPage> {
           onPressed: () {
             if (_height > 0 && _weight > 0 && _age > 0) {
               double _bmi = (_weight / pow(_height, 2)) * 783;
-              print(_bmi);
+              _showResultDialog(_bmi);
             }
           }),
     );
+  }
+
+  void _showResultDialog(double bmi) {
+    String? status;
+    if (bmi < 18.5) {
+      status = "UnderWeight";
+    } else if (bmi >= 18.5 && bmi < 25) {
+      status = "Normal";
+    } else if (bmi >= 25 && bmi < 38) {
+      status = "Overweight";
+    } else {
+      status = "Obese";
+    }
+    showCupertinoDialog(
+        context: context,
+        builder: (BuildContext _context) {
+          return CupertinoAlertDialog(
+            title: Text(status!),
+            content: Text(bmi.toStringAsFixed(2)),
+            actions: [
+              CupertinoDialogAction(
+                child: const Text("Ok"),
+                onPressed: () {
+                  _saveResult(bmi.toString(), status!);
+                  Navigator.pop(_context);
+                },
+              )
+            ],
+          );
+        });
+  }
+
+  void _saveResult(String bmi, String status) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString('bmi_date', DateTime.now().toString());
+    await prefs.setStringList("bmi_data", <String>[bmi, status]);
+    print(" BMI Result Saved!");
   }
 }
