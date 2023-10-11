@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:ibmi/widgets/info_card.dart';
@@ -16,23 +18,26 @@ class _BMIPageState extends State<BMIPage> {
     _deviceHeight = MediaQuery.of(context).size.height;
     _deviceWidth = MediaQuery.of(context).size.width;
     return CupertinoPageScaffold(
-        child: Container(
-            height: _deviceHeight! * 0.85,
-            child: Column(
-              mainAxisSize: MainAxisSize.max,
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Row(
-                  mainAxisSize: MainAxisSize.max,
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [_ageSelectContainer(), _weightSelectContainer()],
-                ),
-                _heightSelectContainer(),
-                _genderSelectContainer(),
-              ],
-            )));
+        child: Center(
+      child: Container(
+          height: _deviceHeight! * 0.85,
+          child: Column(
+            mainAxisSize: MainAxisSize.max,
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Row(
+                mainAxisSize: MainAxisSize.max,
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [_ageSelectContainer(), _weightSelectContainer()],
+              ),
+              _heightSelectContainer(),
+              _genderSelectContainer(),
+              _calculateBMIButton(),
+            ],
+          )),
+    ));
   }
 
   Widget _ageSelectContainer() {
@@ -188,12 +193,14 @@ class _BMIPageState extends State<BMIPage> {
 
   Widget _genderSelectContainer() {
     return InfoCard(
+      width: _deviceWidth! * 0.9,
+      height: _deviceHeight! * 0.11,
       child: Column(
         mainAxisSize: MainAxisSize.max,
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          Text("Gender",
+          const Text("Gender",
               style: TextStyle(
                   fontSize: 15,
                   fontWeight: FontWeight.w400,
@@ -217,8 +224,24 @@ class _BMIPageState extends State<BMIPage> {
               })
         ],
       ),
-      width: _deviceWidth! * 0.9,
-      height: _deviceHeight! * 0.11,
+    );
+  }
+
+  Widget _calculateBMIButton() {
+    return Container(
+      height: _deviceHeight! * .07,
+      child: CupertinoButton(
+          color: Colors.blue,
+          child: const Text(
+            "Calculate BMI",
+            //style: TextStyle(color: Colors.white),
+          ),
+          onPressed: () {
+            if (_height > 0 && _weight > 0 && _age > 0) {
+              double _bmi = (_weight / pow(_height, 2)) * 783;
+              print(_bmi);
+            }
+          }),
     );
   }
 }
