@@ -246,7 +246,7 @@ class _BMIPageState extends State<BMIPage> {
     );
   }
 
-  void _showResultDialog(double bmi) {
+  void _showResultDialog(double bmi) async {
     String? status;
     if (bmi < 18.5) {
       status = "UnderWeight";
@@ -257,6 +257,9 @@ class _BMIPageState extends State<BMIPage> {
     } else {
       status = "Obese";
     }
+
+    await _saveResult(bmi.toString(), status);
+
     showCupertinoDialog(
         context: context,
         builder: (BuildContext _context) {
@@ -267,7 +270,7 @@ class _BMIPageState extends State<BMIPage> {
               CupertinoDialogAction(
                 child: const Text("Ok"),
                 onPressed: () {
-                  _saveResult(bmi.toString(), status!);
+                  // _saveResult(bmi.toString(), status!);
                   Navigator.pop(_context);
                 },
               )
@@ -276,7 +279,8 @@ class _BMIPageState extends State<BMIPage> {
         });
   }
 
-  void _saveResult(String bmi, String status) async {
+  Future _saveResult(String bmi, String status) async {
+    print("I'm saving");
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString('bmi_date', DateTime.now().toString());
     await prefs.setStringList("bmi_data", <String>[bmi, status]);

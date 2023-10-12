@@ -3,8 +3,18 @@ import 'package:flutter/material.dart';
 import 'package:ibmi/widgets/info_card.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class HistoryPage extends StatelessWidget {
+class HistoryPage extends StatefulWidget {
+  HistoryPage({Key? key}) : super(key: key);
+
+  @override
+  State<HistoryPage> createState() => _HistoryPageState();
+}
+
+class _HistoryPageState extends State<HistoryPage> {
   double? _deviceHeight, _deviceWidth;
+  String? date;
+  List<String>? data;
+
   @override
   Widget build(BuildContext context) {
     _deviceHeight = MediaQuery.of(context).size.height;
@@ -18,11 +28,13 @@ class HistoryPage extends StatelessWidget {
   Widget _dataCard() {
     return FutureBuilder(
         future: SharedPreferences.getInstance(),
-        builder: (BuildContext _contex, AsyncSnapshot _snapshot) {
-          if (_snapshot.hasData) {
-            final _prefs = _snapshot.data as SharedPreferences;
-            final _date = _prefs.getString("bmi_date");
-            final _data = _prefs.getStringList('bmi_data');
+        builder: (BuildContext contex, AsyncSnapshot snapshot) {
+          if (snapshot.hasData) {
+            final prefs = snapshot.data as SharedPreferences;
+            prefs.reload();
+            date = prefs.getString("bmi_date");
+            data = prefs.getStringList('bmi_data');
+
             return Center(
               child: InfoCard(
                 width: _deviceWidth! * 0.75,
@@ -32,9 +44,9 @@ class HistoryPage extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    _statusText(_data![1]),
-                    _dateText(_date!),
-                    _bmiText(_data[0])
+                    _statusText(data![1]),
+                    _dateText(date!),
+                    _bmiText(data![0])
                   ],
                 ),
               ),
