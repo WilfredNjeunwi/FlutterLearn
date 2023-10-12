@@ -1,16 +1,10 @@
 # ibmi
 
-A new Flutter project.
+##A new Flutter project for learning Cupertino Designs
 
-## Getting Started
+![Screenshot_20231011-110006](https://github.com/WilfredNjeunwi/FlutterLearn/assets/147338432/a7e70cfc-86a3-4d44-9c99-d034c349a34f)
 
-This project is a starting point for a Flutter application.
 
-A few resources to get you started if this is your first Flutter project:
+![Screenshot_20231011-110021](https://github.com/WilfredNjeunwi/FlutterLearn/assets/147338432/092eaa8c-9a3c-4764-9ef8-980993c4ff3a)
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
