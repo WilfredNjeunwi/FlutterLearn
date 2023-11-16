@@ -68,7 +68,7 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   Widget _emailTextField() => TextFormField(
-        decoration: const InputDecoration(hintText: "Email..."),
+        decoration: const InputDecoration(hintText: "Email"),
         onSaved: (_value) {
           setState(() {
             _email = _value;
