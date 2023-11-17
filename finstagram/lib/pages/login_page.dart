@@ -47,7 +47,7 @@ class _LoginPageState extends State<LoginPage> {
         height: _deviceHeight! * 0.06,
         color: Colors.red,
         child: const Text(
-          "Login",
+          "Login Now",
           style: TextStyle(
               color: Colors.white, fontSize: 25, fontWeight: FontWeight.w600),
         ),
